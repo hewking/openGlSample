@@ -24,6 +24,9 @@ public class Triangle {
 
     FloatBuffer mVertexBuffer;//顶点坐标数据缓冲
     FloatBuffer mTexCoorBuffer;//顶点纹理坐标数据缓冲
+
+    FloatBuffer mVertexBufferRight;//顶点坐标数据缓冲
+    FloatBuffer mTexCoorBufferRight;//顶点纹理坐标数据缓冲
     int vCount = 0;
     float xAngle = 0;//绕x轴旋转的角度
     float yAngle = 0;//绕y轴旋转的角度
@@ -34,6 +37,7 @@ public class Triangle {
     public Triangle(MySurfaceView mv) {
         //初始化顶点坐标与着色数据
         initVertexData();
+        initVertexDataRight();
         //初始化着色器
         initShader(mv);
     }
@@ -43,7 +47,7 @@ public class Triangle {
      */
     public void initVertexData() {
         //顶点坐标数据的初始化================begin============================
-        vCount = 12;
+        vCount = 6;
         final float UNIT_SIZE = 0.15f;
         float vertices[] = new float[]
                 {
@@ -55,13 +59,13 @@ public class Triangle {
                         -0*UNIT_SIZE,11*UNIT_SIZE,0,
                         -22*UNIT_SIZE,11*UNIT_SIZE,0,
 
-                        0*UNIT_SIZE,11*UNIT_SIZE,0,
-                        0*UNIT_SIZE,-11*UNIT_SIZE,0,
-                        22*UNIT_SIZE,-11*UNIT_SIZE,0,
-
-                        22*UNIT_SIZE,-11*UNIT_SIZE,0,
-                        22*UNIT_SIZE,11*UNIT_SIZE,0,
-                        0*UNIT_SIZE,11*UNIT_SIZE,0
+//                        0*UNIT_SIZE,11*UNIT_SIZE,0,
+//                        0*UNIT_SIZE,-11*UNIT_SIZE,0,
+//                        22*UNIT_SIZE,-11*UNIT_SIZE,0,
+//
+//                        22*UNIT_SIZE,-11*UNIT_SIZE,0,
+//                        22*UNIT_SIZE,11*UNIT_SIZE,0,
+//                        0*UNIT_SIZE,11*UNIT_SIZE,0
 
 //        	0*UNIT_SIZE,11*UNIT_SIZE,0,
 //        	-11*UNIT_SIZE,-11*UNIT_SIZE,0,
@@ -97,12 +101,12 @@ public class Triangle {
                         1,1,// 1 ,1
                         1,0, // 1 ,0
                         0,0 ,
-                        0,0,     // 0 , 0
-                        0,1, // 0 , 1
-                        1,1, // 1,1
-                        1,1,// 1 ,1
-                        1,0, // 1 ,0
-                        0,0
+//                        0,0,     // 0 , 0
+//                        0,1, // 0 , 1
+//                        1,1, // 1,1
+//                        1,1,// 1 ,1
+//                        1,0, // 1 ,0
+//                        0,0
 
 //                        0,0,
 //                        0, 1,
@@ -129,6 +133,66 @@ public class Triangle {
 
     }
 
+
+
+    public void initVertexDataRight() {
+        //顶点坐标数据的初始化================begin============================
+        vCount = 6;
+        final float UNIT_SIZE = 0.15f;
+        float vertices[] = new float[]
+                {
+//                        -22*UNIT_SIZE,11*UNIT_SIZE,0,
+//                        -22*UNIT_SIZE,-11*UNIT_SIZE,0,
+//                        -0*UNIT_SIZE,-11*UNIT_SIZE,0,
+//
+//                        -0*UNIT_SIZE,-11*UNIT_SIZE,0,
+//                        -0*UNIT_SIZE,11*UNIT_SIZE,0,
+//                        -22*UNIT_SIZE,11*UNIT_SIZE,0,
+
+                        0*UNIT_SIZE,11*UNIT_SIZE,0,
+                        0*UNIT_SIZE,-11*UNIT_SIZE,0,
+                        22*UNIT_SIZE,-11*UNIT_SIZE,0,
+
+                        22*UNIT_SIZE,-11*UNIT_SIZE,0,
+                        22*UNIT_SIZE,11*UNIT_SIZE,0,
+                        0*UNIT_SIZE,11*UNIT_SIZE,0
+
+                };
+
+        //创建顶点坐标数据缓冲
+        //vertices.length*4是因为一个整数四个字节
+        ByteBuffer vbb = ByteBuffer.allocateDirect(vertices.length * 4);
+        vbb.order(ByteOrder.nativeOrder());//设置字节顺序
+        mVertexBufferRight = vbb.asFloatBuffer();//转换为Float型缓冲
+        mVertexBufferRight.put(vertices);//向缓冲区中放入顶点坐标数据
+        mVertexBufferRight.position(0);//设置缓冲区起始位置
+        //特别提示：由于不同平台字节顺序不同数据单元不是字节的一定要经过ByteBuffer
+        //转换，关键是要通过ByteOrder设置nativeOrder()，否则有可能会出问题
+        //顶点坐标数据的初始化================end============================
+
+        //顶点纹理坐标数据的初始化================begin============================
+        float texCoor[] = new float[]//顶点颜色值数组，每个顶点4个色彩值RGBA
+                {
+
+                        0,0,     // 0 , 0
+                        0,1, // 0 , 1
+                        1,1, // 1,1
+                        1,1,// 1 ,1
+                        1,0, // 1 ,0
+                        0,0 ,
+                };
+        //创建顶点纹理坐标数据缓冲
+        ByteBuffer cbb = ByteBuffer.allocateDirect(texCoor.length * 4);
+        cbb.order(ByteOrder.nativeOrder());//设置字节顺序
+        mTexCoorBufferRight = cbb.asFloatBuffer();//转换为Float型缓冲
+        mTexCoorBufferRight.put(texCoor);//向缓冲区中放入顶点着色数据
+        mTexCoorBufferRight.position(0);//设置缓冲区起始位置
+        //特别提示：由于不同平台字节顺序不同数据单元不是字节的一定要经过ByteBuffer
+        //转换，关键是要通过ByteOrder设置nativeOrder()，否则有可能会出问题
+        //顶点纹理坐标数据的初始化================end============================
+
+    }
+
     //初始化着色器
     public void initShader(MySurfaceView mv) {
         //加载顶点着色器的脚本内容
@@ -145,7 +209,17 @@ public class Triangle {
         muMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
     }
 
-    public void drawSelf(int texId) {
+    public void drawSelf(int texId, int direction) {
+
+        FloatBuffer vertex = null;
+        FloatBuffer texcoor = null;
+        if(direction == 0){
+            vertex = mVertexBuffer;
+            texcoor = mTexCoorBuffer;
+        }else{
+            vertex = mVertexBufferRight;
+            texcoor = mTexCoorBufferRight;
+        }
 
         //制定使用某套shader程序
         GLES20.glUseProgram(mProgram);
@@ -170,7 +244,7 @@ public class Triangle {
                         GLES20.GL_FLOAT,
                         false,
                         3 * 4,   //跳过 3 * 4 个字节（3个数据）再去三个数据
-                        mVertexBuffer
+                        vertex
                 );
         //为画笔指定顶点纹理坐标数据
         GLES20.glVertexAttribPointer
@@ -180,7 +254,7 @@ public class Triangle {
                         GLES20.GL_FLOAT,
                         false,
                         2 * 4,
-                        mTexCoorBuffer
+                        texcoor
                 );
         //允许顶点位置数据数组
         GLES20.glEnableVertexAttribArray(maPositionHandle);

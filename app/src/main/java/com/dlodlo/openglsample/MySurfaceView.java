@@ -26,6 +26,7 @@ class MySurfaceView extends GLSurfaceView
     int textureCTId;//系统分配的拉伸纹理id
     int textureREId;//系统分配的重复纹理id
     int currTextureId;//当前纹理id
+    int currTextureIdRight;//当前纹理id
 
     public MySurfaceView(Context context) {
         super(context);
@@ -59,7 +60,8 @@ class MySurfaceView extends GLSurfaceView
             //清除深度缓冲与颜色缓冲
             GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_COLOR_BUFFER_BIT);
             //绘制纹理矩形
-            texRect.drawSelf(currTextureId);
+            texRect.drawSelf(currTextureId,0);
+            texRect.drawSelf(currTextureIdRight,1);
         }
 
         public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -88,6 +90,7 @@ class MySurfaceView extends GLSurfaceView
             textureREId = initTexture(true);
             //初始化当前纹理id
             currTextureId = textureREId;
+            currTextureIdRight = initTexture(true);
         }
 
         public int initTexture(boolean isRepeat)//textureId
